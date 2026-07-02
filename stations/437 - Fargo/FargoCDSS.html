@@ -1067,12 +1067,15 @@ Promise.all([fetchOMData(), fetchODData(), fetchItemLink(), fetchAbxLink()]) // 
   if (dropdownValue) {
     dropdown.value = decodeURIComponent(dropdownValue);
   } else {
-    // If no dropdown value is provided in the URL, set a default value
-    dropdown.value = MainMenu;
+    // If no dropdown value is provided in the URL, choose a valid default option
+    const mainMenuOption = dropdown.querySelector(`option[value="${MainMenu}"]`);
+    const firstVisibleOption = Array.from(dropdown.options).find(opt => opt.style.display !== 'none' && !opt.disabled);
+    const fallbackOption = mainMenuOption || firstVisibleOption || dropdown.options[0];
+    if (fallbackOption) dropdown.value = fallbackOption.value;
   }
     pushHistory(dropdown.value);
     filterData({ target: dropdown });
-    scrollToTop()    
+    scrollToTop();
     adjustFontSize();
   })
   .catch(error => {

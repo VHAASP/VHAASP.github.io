@@ -1418,17 +1418,21 @@ function handleMainMenu() {
   document.getElementById('searchInput').value = null;
   document.getElementById('searchInput').placeholder = "\u{1F50D}";
   populateDropdown(omData);
-  if (currentVersion === 'inpt') {	
-  	dropdown.value = MainMenu;
-  	} else if (currentVersion === 'outpt') {
-	  	dropdown.value = outptMenu;
-	} else if (currentVersion === 'eruc') {
-	  	dropdown.value = erucMenu;
-  	};
-  filterData({ target: dropdown });
-  scrollToTop()    
-  adjustFontSize();
+if (currentVersion === 'inpt') {
+    dropdown.value = MainMenu;
+  } else if (currentVersion === 'outpt') {
+    dropdown.value = outptMenu;
+  } else if (currentVersion === 'eruc') {
+    dropdown.value = erucMenu;
   }
+  if (!dropdown.querySelector(`option[value="${dropdown.value}"]`)) {
+    const firstVisibleOption = Array.from(dropdown.options).find(opt => opt.style.display !== 'none' && !opt.disabled);
+    if (firstVisibleOption) dropdown.value = firstVisibleOption.value;
+  }
+  filterData({ target: dropdown });
+  scrollToTop();
+  adjustFontSize();
+}
 
 // Function to handle the Index button click event
 function handleIndex() {
@@ -1678,17 +1682,24 @@ Promise.all([fetchOMData(), fetchODData(), fetchAbxLink()]) // Add fetchIndex()
   if (dropdownValue) {
     dropdown.value = decodeURIComponent(dropdownValue);
   } else {
-    // If no dropdown value is provided in the URL, set a default value
-    dropdown.value = MainMenu;
+    // If no dropdown value is provided in the URL, choose a valid default option
+    const mainMenuOption = dropdown.querySelector(`option[value="${MainMenu}"]`);
+    const firstVisibleOption = Array.from(dropdown.options).find(opt => opt.style.display !== 'none' && !opt.disabled);
+    const fallbackOption = mainMenuOption || firstVisibleOption || dropdown.options[0];
+    if (fallbackOption) dropdown.value = fallbackOption.value;
   }
     pushHistory(dropdown.value);
     filterData({ target: dropdown });
-    scrollToTop()    
+    scrollToTop();
     adjustFontSize();
   })
   .catch(error => {
     console.error('Error:', error);
-  });   
+    const resultContainer = document.getElementById('resultContainer');
+    if (resultContainer) {
+      resultContainer.innerHTML = '<div style="color:red">Data load failed. See browser console.</div>';
+    }
+  });
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/service-worker.js', {
     scope: '/'
