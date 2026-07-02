@@ -1,0 +1,50 @@
+backend:
+  name: github
+  repo: VHAASP/VHAASP.github.io
+  branch: main
+  # When the OAuth service is ready, point Decap at it here.
+  # auth_endpoint: https://YOUR-OAUTH-SERVICE/auth
+  # base_url: https://YOUR-OAUTH-SERVICE
+
+local_backend:
+  url: http://localhost:8081/api/v1
+  allowed_hosts:
+    - localhost
+    - 127.0.0.1
+
+publish_mode: simple
+site_url: https://vhaasp.github.io/
+display_url: https://vhaasp.github.io/
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+editor:
+  preview: false
+
+collections:
+  - label: "Site Settings"
+    name: "site_settings"
+    files:
+      - label: "Web Manifest"
+        name: "web_manifest"
+        file: "manifest.webmanifest"
+        format: "json"
+        extension: "json"
+        identifier_field: name
+        summary: "{{name}}"
+        fields:
+          - {label: "Name", name: "name", widget: "string"}
+          - {label: "Short Name", name: "short_name", widget: "string"}
+          - {label: "Description", name: "description", widget: "string", required: false}
+          - {label: "Scope", name: "scope", widget: "string"}
+          - {label: "Start URL", name: "start_url", widget: "string"}
+          - {label: "Background Color", name: "background_color", widget: "string"}
+          - {label: "Theme Color", name: "theme_color", widget: "string"}
+          - {label: "Display", name: "display", widget: "string"}
+          - label: "Icons"
+            name: "icons"
+            widget: list
+            fields:
+              - {label: "Src", name: "src", widget: "string"}
+              - {label: "Sizes", name: "sizes", widget: "string"}
+              - {label: "Type", name: "type", widget: "string"}
+              - {label: "Purpose", name: "purpose", widget: "string", required: false}
