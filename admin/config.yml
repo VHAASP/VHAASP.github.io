@@ -2,17 +2,10 @@ backend:
   name: github
   repo: VHAAntimicrobialStewardship/VHAAntimicrobialStewardship.github.io
   branch: main
-  # When the OAuth service is ready, point Decap at it here.
-  # auth_endpoint: https://YOUR-OAUTH-SERVICE/auth
-  # base_url: https://YOUR-OAUTH-SERVICE
+  client_id: YOUR_GITHUB_OAUTH_CLIENT_ID
+  client_secret: YOUR_GITHUB_OAUTH_CLIENT_SECRET
 
-local_backend:
-  url: http://localhost:8081/api/v1
-  allowed_hosts:
-    - localhost
-    - 127.0.0.1
-
-publish_mode: simple
+publish_mode: editorial_workflow
 site_url: https://VHAAntimicrobialStewardship.github.io/
 display_url: https://VHAAntimicrobialStewardship.github.io/
 media_folder: "assets/uploads"
