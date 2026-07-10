@@ -6,10 +6,8 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $abxSource = 'AbxLinks.json'
-$omSource = 'stations/001-TestStation/TestStationOMJSON.json'
 
 $abxWrapper = 'cms-data/abx-links.cms.json'
-$omWrapper = 'cms-data/teststation-om.cms.json'
 
 function Write-JsonFile {
   param(
@@ -25,26 +23,19 @@ if ($Mode -eq 'Export') {
   New-Item -ItemType Directory -Path 'cms-data' -Force | Out-Null
 
   $abx = Get-Content -Path $abxSource -Raw | ConvertFrom-Json
-  $om = Get-Content -Path $omSource -Raw | ConvertFrom-Json
 
   Write-JsonFile -Data ([ordered]@{ entries = @($abx) }) -Path $abxWrapper
-  Write-JsonFile -Data ([ordered]@{ menus = @($om) }) -Path $omWrapper
 
-  Write-Output 'Export complete: wrapper files refreshed from source JSON.'
+  Write-Output 'Export complete: ABX wrapper file refreshed from source JSON.'
   exit 0
 }
 
 $abxCms = Get-Content -Path $abxWrapper -Raw | ConvertFrom-Json
-$omCms = Get-Content -Path $omWrapper -Raw | ConvertFrom-Json
 
 if ($null -eq $abxCms.entries) {
   throw "Missing 'entries' in $abxWrapper"
 }
-if ($null -eq $omCms.menus) {
-  throw "Missing 'menus' in $omWrapper"
-}
 
 Write-JsonFile -Data @($abxCms.entries) -Path $abxSource
-Write-JsonFile -Data @($omCms.menus) -Path $omSource
 
-Write-Output 'Import complete: source JSON updated from CMS wrapper files.'
+Write-Output 'Import complete: ABX source JSON updated from CMS wrapper file.'
